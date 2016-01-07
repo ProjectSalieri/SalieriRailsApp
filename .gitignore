@@ -18,4 +18,4 @@ doc/
 .idea
 .secret
 
-lib/twitter/ipadic
+lib/nlp/ipadic
