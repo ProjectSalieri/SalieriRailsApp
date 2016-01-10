@@ -11,8 +11,14 @@ class SalierisController < ApplicationController
   end
 
   def python_sample
-    cmd = "python #{File.join(Rails.root.to_s, 'lib', 'nlp', 'sample.py')}"
-    ret = `#{cmd}`
-    render :text => ret
+    cmd_array = [
+                 "python #{File.join(Rails.root.to_s, 'lib', 'nlp', 'sample.py')}",
+                ]
+    msg = ""
+    cmd_array.each { |cmd|
+      msg += "[command]#{cmd}\n<br>"
+      msg += "[output]" + `#{cmd}` + "\n<br>"
+    }
+    render :text => msg
   end
 end

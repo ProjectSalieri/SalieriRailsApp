@@ -1,3 +1,6 @@
 
+import sys
+
 if __name__ == '__main__':
-    print("hello from python")
+    print("hello from python\n<br>")
+    print(sys.version)
