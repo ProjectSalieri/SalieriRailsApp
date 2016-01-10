@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(version: 20160110080833) do
     t.datetime "updated_at",                       null: false
   end
 
+  add_index "doc_categories", ["doc_category_type_id"], name: "fk_rails_297809dbc0", using: :btree
+
   create_table "doc_category_infos", force: :cascade do |t|
     t.integer  "doc_category_id", limit: 4
     t.integer  "word_id",         limit: 4
@@ -29,6 +31,9 @@ ActiveRecord::Schema.define(version: 20160110080833) do
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
   end
+
+  add_index "doc_category_infos", ["doc_category_id"], name: "fk_rails_87a9af9940", using: :btree
+  add_index "doc_category_infos", ["word_id"], name: "fk_rails_c7fd2f9114", using: :btree
 
   create_table "doc_category_types", force: :cascade do |t|
     t.string   "name_jp",    limit: 255
@@ -43,11 +48,17 @@ ActiveRecord::Schema.define(version: 20160110080833) do
   end
 
   create_table "words", force: :cascade do |t|
-    t.string   "name",             limit: 255
-    t.integer  "value",            limit: 4
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.integer  "category_type_id", limit: 4
+    t.string   "name",                 limit: 255
+    t.integer  "value",                limit: 4
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.integer  "doc_category_type_id", limit: 4
   end
 
+  add_index "words", ["doc_category_type_id"], name: "fk_rails_2e99fb16fd", using: :btree
+
+  add_foreign_key "doc_categories", "doc_category_types"
+  add_foreign_key "doc_category_infos", "doc_categories"
+  add_foreign_key "doc_category_infos", "words"
+  add_foreign_key "words", "doc_category_types"
 end
