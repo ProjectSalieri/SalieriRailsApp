@@ -19,6 +19,10 @@ class Salieri < ActiveRecord::Base
     return ret
   end
 
+  def update_appear_count(parse_result, category_type_name_en, category_name_en)
+
+  end
+
   def parse(document)
     if @tagger == nil
       @tagger = init_tagger
