@@ -53,4 +53,11 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  resources :salieris do
+    collection do
+      get :sample
+      get :python_sample
+    end
+  end
 end
