@@ -56,8 +56,9 @@ Rails.application.routes.draw do
 
   resources :salieris do
     collection do
-      get :sample
+      get :igo_sample
       get :python_sample
+      get :sample
     end
   end
 end
