@@ -19,8 +19,22 @@ class Salieri < ActiveRecord::Base
     return ret
   end
 
+  # corpusの出現頻度情報更新
   def update_appear_count(parse_result, category_type_name_en, category_name_en)
+    category_type = DocCategoryType.find_by({name_en: category_type_name_en})
+    category = DocCategory.find_by({name_en: category_name_en})
 
+    # カテゴリの出現頻度更新
+    category.appear_count += 1
+
+    parse_result.each { |w|
+      word = Word.find_or_create_by({name: w, doc_category_type_id: category_type.id})
+      category_info = DocCategoryInfo.find_or_create_by({doc_category_id: category.id, word_id: word.id})
+      appear_count = category_info.appear_count == nil ? 0 : category_info.appear_count + 1
+      category_info.appear_count = appear_count
+    }
+
+    category.save
   end
 
   def parse(document)
