@@ -61,7 +61,7 @@ group :test do
 	  gem 'selenium-webdriver', '2.35.1'
 	  gem 'factory_girl_rails', '4.2.1'
 	  # evaluate_script
-	  gem "capybara-webkit", '1.3.1'
+	  #gem "capybara-webkit", '1.3.1'
 end
 
 group :production do
