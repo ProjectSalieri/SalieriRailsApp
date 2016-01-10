@@ -2,11 +2,21 @@ class Salieri < ActiveRecord::Base
 
   # ジャンルカテゴライズのために形態素解析
   def parse_for_genre_categorize(document)
-=begin
+    ret = []
+
+    noun_list = ["名詞", "動詞"]
+
+    t = parse(document)
     t.each { |m|
-      output += "#{m.surface} #{m.feature} #{m.start}\n"
+      features = m.feature.split(",")
+      noun = features[0]
+      next if noun_list.include?(noun) == false
+      next if noun == "名詞" && features[1] == "代名詞"
+
+      base = features[6]
+      ret << base
     }
-=end
+    return ret
   end
 
   def parse(document)
@@ -21,7 +31,7 @@ class Salieri < ActiveRecord::Base
 
   # taggerの初期化
   def init_tagger
-    ipadic_path = File.join(get_lib_dir, "nlp", "ipadic")
+    ipadic_path = File.join(Rails.root.to_s, "lib", "nlp", "ipadic")
 
     # 解凍済みファイルは重いので初回のみ解凍
     if File.exist?(ipadic_path) == false
