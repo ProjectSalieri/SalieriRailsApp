@@ -14,35 +14,35 @@
 ActiveRecord::Schema.define(version: 20160110060551) do
 
   create_table "doc_categories", force: :cascade do |t|
-    t.string   "name_jp"
-    t.string   "name_en"
-    t.integer  "appear_count"
-    t.integer  "doc_category_type_id"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.string   "name_jp",              limit: 255
+    t.string   "name_en",              limit: 255
+    t.integer  "appear_count",         limit: 4
+    t.integer  "doc_category_type_id", limit: 4
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   create_table "doc_category_infos", force: :cascade do |t|
-    t.integer  "doc_category_id"
-    t.integer  "word_id"
-    t.integer  "appear_count"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.integer  "doc_category_id", limit: 4
+    t.integer  "word_id",         limit: 4
+    t.integer  "appear_count",    limit: 4
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "doc_category_types", force: :cascade do |t|
-    t.string   "name_jp"
-    t.string   "name_en"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name_jp",    limit: 255
+    t.string   "name_en",    limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "words", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "value"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.integer  "category_type_id"
+    t.string   "name",             limit: 255
+    t.integer  "value",            limit: 4
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.integer  "category_type_id", limit: 4
   end
 
 end

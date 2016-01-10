@@ -5,3 +5,9 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+begin
+  doc_category_type = DocCategoryType.find_or_create_by({:name_jp => "ジャンル分類", :name_en => "GenreCategorize"})
+rescue => e
+  abort("DocCategoryType失敗\n#{e.backtrace().join("\n")}")
+end
