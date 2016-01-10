@@ -30,8 +30,9 @@ class Salieri < ActiveRecord::Base
     parse_result.each { |w|
       word = Word.find_or_create_by({name: w, doc_category_type_id: category_type.id})
       category_info = DocCategoryInfo.find_or_create_by({doc_category_id: category.id, word_id: word.id})
-      appear_count = category_info.appear_count == nil ? 0 : category_info.appear_count + 1
+      appear_count = category_info.appear_count == nil ? 1 : category_info.appear_count + 1
       category_info.appear_count = appear_count
+      category_info.save
     }
 
     category.save

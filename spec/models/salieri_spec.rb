@@ -32,7 +32,7 @@ describe Salieri do
     parse_result_cnt.each { |k, v|
       word = Word.find_by({name: k, doc_category_type_id: category_type.id})
       category_info = DocCategoryInfo.find_by(doc_category_id: category.id, word_id: word.id)
-#      expect(category_info.appear_count).to eq v
+      expect(category_info.appear_count).to eq v
     }
   end
 
