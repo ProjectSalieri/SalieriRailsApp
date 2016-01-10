@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160110055427) do
+ActiveRecord::Schema.define(version: 20160110060551) do
 
   create_table "doc_categories", force: :cascade do |t|
     t.string   "name_jp"
@@ -20,6 +20,14 @@ ActiveRecord::Schema.define(version: 20160110055427) do
     t.integer  "doc_category_type_id"
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
+  end
+
+  create_table "doc_category_infos", force: :cascade do |t|
+    t.integer  "doc_category_id"
+    t.integer  "word_id"
+    t.integer  "appear_count"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   create_table "doc_category_types", force: :cascade do |t|
