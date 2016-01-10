@@ -32,7 +32,7 @@ class Salieri < ActiveRecord::Base
       category_info = DocCategoryInfo.find_or_create_by({doc_category_id: category.id, word_id: word.id})
       appear_count = category_info.appear_count == nil ? 1 : category_info.appear_count + 1
       category_info.appear_count = appear_count
-      category_info.save
+      category_info.save # categoryのdoc_category_infosを直接変更しないと、findするたびに新しいインスタンスになってしまうのでこまめなsaveが必要になってる
     }
 
     category.save
