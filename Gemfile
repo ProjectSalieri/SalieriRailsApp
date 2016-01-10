@@ -65,7 +65,7 @@ group :test do
 end
 
 group :production do
-  # for Heroku
-  gem 'pg', '0.15.1'
-  gem 'rails_12factor', '0.0.2'
+  # for OpenShift
+  gem 'mysql2',  '~> 0.3.18'
+#  gem 'rails_12factor', '0.0.2'
 end
