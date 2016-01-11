@@ -1,5 +1,8 @@
 class SalierisController < ApplicationController
 
+  # CSRFトークンエラー対応
+  protect_from_forgery with: :null_session
+
   def sample
     render :text => "success"
   end
