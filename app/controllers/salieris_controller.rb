@@ -21,4 +21,12 @@ class SalierisController < ApplicationController
     }
     render :text => msg
   end
+
+  def get_sample
+    render :text => params
+  end
+
+  def post_sample
+    render :text => params
+  end
 end

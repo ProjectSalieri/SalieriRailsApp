@@ -59,6 +59,8 @@ Rails.application.routes.draw do
       get :igo_sample
       get :python_sample
       get :sample
+      get :get_sample
+      post :post_sample
     end
   end
 end
