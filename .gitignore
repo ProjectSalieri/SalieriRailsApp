@@ -19,3 +19,4 @@ doc/
 .secret
 
 lib/nlp/ipadic
+lib/twitter/get_access_token_sample.rb

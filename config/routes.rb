@@ -63,4 +63,10 @@ Rails.application.routes.draw do
       post :post_sample
     end
   end
+
+  resources :twitter_accounts do
+    collection do
+      get :regist_user
+    end
+  end
 end
