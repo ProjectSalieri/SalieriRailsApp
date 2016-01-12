@@ -65,7 +65,7 @@ module TwitterUtil
   # 投稿
   #
   def post(accessor, text, post_options = {})
-    accessor.get_client().update(text, post_options)
+    return accessor.get_client().update(text, post_options)
   end
   module_function :post
 

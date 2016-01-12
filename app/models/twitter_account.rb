@@ -22,7 +22,7 @@ class TwitterAccount < ActiveRecord::Base
       post_options[:in_reply_to_status_id] = opt[:reply_id]
     end
 
-    Twitter::TwitterUtil::post(@accessor, text, post_options)
+    return Twitter::TwitterUtil::post(@accessor, text, post_options)
   end
 
   private
