@@ -1,5 +1,7 @@
 class Salieri < ActiveRecord::Base
-
+  
+  def self.twitter_account_name ; return "projectsalieri" ; end
+  
   # ジャンルカテゴライズのために形態素解析
   def parse_for_genre_categorize(document)
     ret = []
