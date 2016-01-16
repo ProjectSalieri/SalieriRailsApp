@@ -58,17 +58,24 @@ Rails.application.routes.draw do
     collection do
       get :talk_to
       get :read_news
-      get :igo_sample
-      get :python_sample
-      get :sample
-      get :get_sample
-      post :post_sample
     end
   end
 
   resources :twitter_accounts do
     collection do
       get :regist_user
+    end
+  end
+
+  namespace :admin do
+    resources :tests do
+      collection do
+        get :igo_test
+        get :python_test
+        get :numpy_test
+        get :get_test
+        post :post_test
+      end
     end
   end
 end
