@@ -18,6 +18,7 @@ if __name__ == '__main__':
         port = os.getenv('OPENSHIFT_MYSQL_DB_PORT')
     mysql_info.update({"host" : host})
     mysql_info.update({"port" : port})
+    print(mysql_info)
         
     print("Start Connect")
     try:
