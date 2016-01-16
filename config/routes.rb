@@ -73,6 +73,7 @@ Rails.application.routes.draw do
         get :igo_test
         get :python_test
         get :numpy_test
+        get :python_sql_test
         get :get_test
         post :post_test
       end

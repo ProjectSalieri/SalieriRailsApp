@@ -23,6 +23,12 @@ class Admin::TestsController < ApplicationController
     render :text => msg
   end
 
+  # MySQL-pythonの動作確認
+  def python_sql_test
+    msg = exec_python_script(File.join('nlp', 'mysql_sample.py'))
+    render :text => msg
+  end
+
   # GETリクエストの動作確認
   def get_test
     render :text => params
@@ -42,7 +48,8 @@ class Admin::TestsController < ApplicationController
     msg = ""
     cmd_array.each { |cmd|
       msg += "[command]#{cmd}\n<br>"
-      msg += "[output]" + `#{cmd}` + "\n<br>"
+      ret = `#{cmd}`
+      msg += "[output]" + ret.gsub("\n", "<br>") + "\n<br>"
     }
     return msg
   end
