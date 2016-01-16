@@ -11,17 +11,21 @@ if __name__ == '__main__':
         content = fin.read()
     mysql_info = json.loads(content)
     host = "localhost"
-    if os.getenv('OPENSHIFT_MYSQL_DB_HOST') == None:
+    if os.getenv('OPENSHIFT_MYSQL_DB_HOST') != None:
         host = os.getenv('OPENSHIFT_MYSQL_DB_HOST')
     port = 3306
-    if os.getenv('OPENSHIFT_MYSQL_DB_PORT') == None:
+    if os.getenv('OPENSHIFT_MYSQL_DB_PORT') != None:
         port = os.getenv('OPENSHIFT_MYSQL_DB_PORT')
     mysql_info.update({"host" : host})
     mysql_info.update({"port" : port})
         
     print("Start Connect")
     try:
-        connection = MySQLdb.connect(db=mysql_info["db_name"],user=mysql_info["user_name"], passwd=mysql_info["password"])
+        connection = MySQLdb.connect(
+            db=mysql_info["db_name"],
+            user=mysql_info["user_name"],
+            passwd=mysql_info["password"],
+            host=mysql_info["host"])
     except Exception as e:
         print("connection error")
         print(e.args)
