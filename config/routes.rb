@@ -68,6 +68,12 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    resources :pythons do
+      collection do
+        get :new_file
+        post :create_file
+      end
+    end
     resources :tests do
       collection do
         get :igo_test
