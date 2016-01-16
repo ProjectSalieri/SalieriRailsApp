@@ -80,6 +80,11 @@ Rails.application.routes.draw do
         delete :delete_file
       end
     end
+    resources :pythons do
+      collection do
+        get :env_check
+      end
+    end
     resources :tests do
       collection do
         get :igo_test
