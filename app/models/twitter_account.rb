@@ -29,7 +29,7 @@ class TwitterAccount < ActiveRecord::Base
   def login
     return true if @accessor != nil
 
-    @accessor = TwitterAccessor.new()
+    @accessor = Twitter::TwitterAccessor.new()
     admin_user = TwitterAccount.admin
     @accessor.login(admin_user.consumer_key, admin_user.consumer_secret, access_token_key, access_token_secret)
   end

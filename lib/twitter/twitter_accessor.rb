@@ -10,6 +10,8 @@ require 'yaml'
 
 include Twitter
 
+module Twitter
+
 ENV["SSL_CERT_FILE"] = "#{File.dirname(__FILE__)}/cacert.pem"
 
 #
@@ -94,6 +96,8 @@ class TwitterAccessor
 
     return @client
   end
+
+end
 
 end
 
