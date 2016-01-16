@@ -23,6 +23,8 @@ class Admin::PythonsController < ApplicationController
     end
     File.open(file_path, "w:utf-8:utf-8"){ |fout| fout.write(content) }
 
+    info = Admin::StringTable.find_or_create_by({:key => "CreateFile", :value => file_path})
+
     render :text => "#{file_path}を作成しました"
   end
 end

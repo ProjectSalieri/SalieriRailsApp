@@ -11,7 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160112145006) do
+ActiveRecord::Schema.define(version: 20160116145751) do
+
+  create_table "admin_string_tables", force: :cascade do |t|
+    t.string   "key",        limit: 255
+    t.string   "value",      limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
 
   create_table "doc_categories", force: :cascade do |t|
     t.string   "name_jp",              limit: 255
