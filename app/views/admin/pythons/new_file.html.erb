@@ -1,20 +1,7 @@
 <h1>ファイル作成API</h1><br>
 <br>
 
-<%
-   text_width = 100
-%>
-
 <%= form_tag(create_file_admin_pythons_path) do |f| %>
-<li>
-	<ul>
-	<%= label_tag "ファイルパス(#{Rails.root.to_s}からの相対パス)" %><br>
-	<%= text_field_tag  "file_path", "", :size => "#{text_width}px", :maxlength => 100 %><br>
-	</ul>
-	<ul>
-	<%= label_tag "ファイルの内容" %><br>
-	<%= text_area_tag "content", "", :size => "#{text_width}x20" %><br>
-	</ul>
-</li>
+	<%= render "form_file" %>
 	<%= submit_tag "ファイル作成" %>
 <% end %>

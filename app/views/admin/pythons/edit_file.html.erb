@@ -1,0 +1,7 @@
+<h1><%= "編集ページ" %></h1><br>
+
+<%= form_tag(update_file_admin_pythons_path, :method => "put") do |f| %>
+	<%= render "form_file" %>
+	<%= hidden_field_tag "id", "#{@file.id}" %>
+	<%= submit_tag "ファイル更新" %>
+<% end %>

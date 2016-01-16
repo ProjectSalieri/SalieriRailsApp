@@ -1,0 +1,14 @@
+<%
+   text_width = 100
+%>
+
+<li>
+	<ul>
+	<%= label_tag "ファイルパス(#{Rails.root.to_s}からの相対パス)" %><br>
+	<%= text_field_tag  "file_path", @file_path, :size => "#{text_width}px", :maxlength => 100 %><br>
+	</ul>
+	<ul>
+	<%= label_tag "ファイルの内容" %><br>
+	<%= text_area_tag "content", @content, :size => "#{text_width}x20" %><br>
+	</ul>
+</li>

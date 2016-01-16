@@ -72,8 +72,12 @@ Rails.application.routes.draw do
     end
     resources :pythons do
       collection do
+        get :index_file
         get :new_file
+        get :edit_file
         post :create_file
+        put :update_file
+        delete :delete_file
       end
     end
     resources :tests do
