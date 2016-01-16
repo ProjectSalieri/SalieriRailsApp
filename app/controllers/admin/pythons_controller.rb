@@ -47,7 +47,17 @@ class Admin::PythonsController < ApplicationController
   
   # DELETE
   def delete_file
+    params_proc_for_file(params)
+    if File.exist?(@file_path)
+      require 'fileutils'
+      FileUtils.rm(@file_path)
+    end
 
+    @file.destroy
+
+    respond_to do |format|
+      format.html { redirect_to index_file_admin_pythons_path, :notice => "#{@file_path}を削除しました" }
+    end
   end
 
   private

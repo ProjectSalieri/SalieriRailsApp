@@ -13,7 +13,7 @@
 	<tr>
 	  <th><%= file.value %></th>
 	  <th><%= link_to "編集", edit_file_admin_pythons_path + "?id=#{file.id}" %></th>
-	  <th>削除</th>
+	  <th><%= link_to "削除", delete_file_admin_pythons_path + "?id=#{file.id}", method: :delete, data: { confirm: "本当に削除しますか?" } %></th>
 	</tr>
 	<% end %>	
   </tbody>
