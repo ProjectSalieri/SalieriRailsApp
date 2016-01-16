@@ -1,0 +1,17 @@
+<h1>StringのKey/Value一覧</h1>
+
+<table border="2" cellpadding="5" cellspacing="0">
+  <thead>
+	<tr style="background:#ccccff">
+	  <th>Key</th><th>Value</th><tr>
+	</tr>
+  </thead>
+  <tbody>
+	  <% @strings.each do |string| %>
+	  <tr>
+		<th><%= string.key %></th>
+		<th><%= string.value %></th>
+	  </tr>
+	  <% end %>
+  </tbody>
+</table>

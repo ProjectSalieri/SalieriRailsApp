@@ -68,6 +68,8 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    resources :string_tables do
+    end
     resources :pythons do
       collection do
         get :new_file
