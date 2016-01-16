@@ -1,0 +1,21 @@
+<h1>ファイル一覧</h1><br>
+
+<table border="2">
+  <thead>
+	<tr style="background:#ccccff">
+	  <th>ファイルパス</th>
+	  <th></th>
+	  <th></th>
+	</tr>
+  </thead>
+  <tbody>
+	<% @files.each do |file| %>
+	<tr>
+	  <th><%= file.value %></th>
+	  <th><%= link_to "編集", edit_file_admin_files_path + "?id=#{file.id}" %></th>
+	  <th><%= link_to "削除", delete_file_admin_files_path + "?id=#{file.id}", method: :delete, data: { confirm: "本当に削除しますか?" } %></th>
+	</tr>
+	<% end %>	
+  </tbody>
+</table>
+

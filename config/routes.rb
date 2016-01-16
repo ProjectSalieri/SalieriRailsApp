@@ -70,7 +70,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :string_tables do
     end
-    resources :pythons do
+    resources :files do
       collection do
         get :index_file
         get :new_file
