@@ -22,6 +22,26 @@ class SalierisController < ApplicationController
     end
   end
 
+  include Data::MicrosoftNewsCrawler
+
+  # 
+  def read_news
+    user = TwitterAccount.find_by({:name_en => Salieri.twitter_account_name})
+
+    # @todo カテゴリや、一覧から選択する部分は好みに合わせて
+#    news_category = Data::MicrosoftNewsCrawler::MicrosoftNewsFunction::DEFAULT_CATEGORIES.sample()
+    news_category = MicrosoftNewsFunction::DEFAULT_CATEGORIES.sample()
+    results = MicrosoftNewsFunction.get_url_catalog(news_category)
+    url = results.sample[:url]
+
+    news_info = MicrosoftNewsFunction.get_news(url)
+
+    post_msg = "[Salieri]感想機能はまだ。自主的にニュース読むようにしたい\n#{news_info[:title]}\n#{url}"
+
+    render :text => post_msg
+    
+  end
+
   # 下記コードはテスト用に違うコントローラーにしておくべき
 
   def sample

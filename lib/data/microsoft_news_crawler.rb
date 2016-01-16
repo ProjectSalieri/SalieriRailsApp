@@ -5,7 +5,9 @@
 
 require "open-uri"
 
-module MicrsoftNewsFunction
+module Data::MicrosoftNewsCrawler
+
+module MicrosoftNewsFunction
   SERVER_URL = "http://www.msn.com"
   TOP_URL = "#{SERVER_URL}/ja-jp"
   DEFAULT_CATEGORIES = ["entertainment", "techandscience", "money", "sports"]
@@ -56,17 +58,19 @@ module MicrsoftNewsFunction
   end
 end
 
+end
+
 # テスト関数
 if __FILE__ == $0
-  url = MicrsoftNewsFunction::TOP_URL
+  url = Data::MicrosoftNewsCrawler::MicrosoftNewsFunction::TOP_URL
 =begin
   open(url) { |uri|
     puts uri.read
   }
 =end
-  results = MicrsoftNewsFunction.get_url_catalog("money")
+  results = Data::MicrosoftNewsCrawler::MicrosoftNewsFunction.get_url_catalog("money")
   results.each { |result|
-    puts MicrsoftNewsFunction.get_news(result[:url])
+    puts Data::MicrosoftNewsCrawler::MicrosoftNewsFunction.get_news(result[:url])
   }
 
 end
