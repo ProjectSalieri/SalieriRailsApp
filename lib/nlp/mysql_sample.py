@@ -46,18 +46,11 @@ if __name__ == '__main__':
 
     print("Load MySQL login info")
     mysql_info_path = os.path.join( os.path.dirname(__file__), "mysql_info.json" )
-    with open(mysql_info_path, "r") as fin:
-        content = fin.read()
-    mysql_info = json.loads(content)
-    host = "localhost"
-    if os.getenv('OPENSHIFT_MYSQL_DB_HOST') != None:
-        host = os.getenv('OPENSHIFT_MYSQL_DB_HOST')
-    port = 3306
-    if os.getenv('OPENSHIFT_MYSQL_DB_PORT') != None:
-        port = os.getenv('OPENSHIFT_MYSQL_DB_PORT')
-    mysql_info.update({"host" : host})
-    mysql_info.update({"port" : port})
-    print(mysql_info)
+    if os.path.exists(mysql_info_path):
+        with open(mysql_info_path, "r") as fin:
+            content = fin.read()
+        mysql_info = json.loads(content)
+        print(mysql_info)
         
     mysql = MySQLWrapper()
     print("Start Connect")
