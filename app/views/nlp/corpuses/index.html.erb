@@ -1,0 +1,51 @@
+<h1>コーパス一覧</h1>
+
+<% doc_categories = DocCategory.where(:doc_category_type_id => @doc_category_type.id) %>
+
+<h2><%= @doc_category_type.name_en %></h2>
+
+<table border="2">
+  <thead>
+	<tr style="background:#ccccff">
+	  <% doc_categories.each do |doc_category| %>
+	  <th><%= "#{doc_category.name_jp}(#{doc_category.name_en})" %></th>
+	  <% end %>
+	</tr>
+  </thead>
+
+  <tbody>
+	<tr>
+	  <% doc_categories.each do |doc_category| %>
+	  <th><%= doc_category.appear_count %></th>
+	  <% end %>
+	</tr>
+  </tbody>
+
+</table>
+
+<table border="2">
+  <thead>
+	<tr style="background:#ccccff">
+	  <th>単語</th>
+	  <th><%= "value" %></th>
+	  <% doc_categories.each do |doc_category| %>
+	  <th><%= "出現頻度(#{doc_category.name_en})" %></th>
+	  <% end %>
+	</tr>
+  </thead>
+
+  <tbody>
+	<% @word_names.each do |word_name| %>
+	<tr>
+	  <th><%= word_name %></th>
+	  <% word = Word.find_by({:name => word_name, :doc_category_type_id => @doc_category_type.id}) %>
+	  <th><%= word.value %></th>
+	  <% doc_categories.each do |doc_category| %>
+	  	<% word_info = DocCategoryInfo.find_by({:doc_category_id => doc_category.id, :word_id => word.id}) %>
+	  <th><%= word_info == nil ? 0 : word_info.appear_count %></th>
+	  <% end %>
+	</tr>
+	<% end %>
+  </tbody>
+
+</table>

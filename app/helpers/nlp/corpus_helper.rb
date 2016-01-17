@@ -1,0 +1,2 @@
+module Nlp::CorpusHelper
+end

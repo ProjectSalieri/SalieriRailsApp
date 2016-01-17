@@ -67,6 +67,14 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :nlp do
+    resources :corpuses do
+      collection do
+        get :index
+      end
+    end
+  end
+
   namespace :admin do
     resources :string_tables do
     end
