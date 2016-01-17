@@ -63,6 +63,13 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :salieri do
+    namespace :twitters do
+      get :new_tweet
+      post :create_tweet
+    end
+  end
+
   resources :twitter_accounts do
     collection do
       get :regist_user

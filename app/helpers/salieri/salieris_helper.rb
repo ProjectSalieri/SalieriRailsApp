@@ -1,0 +1,2 @@
+module Salieri::SalierisHelper
+end
