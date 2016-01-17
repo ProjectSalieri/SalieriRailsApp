@@ -25,7 +25,7 @@ class Admin::TestsController < ApplicationController
 
   # MySQL-pythonの動作確認
   def python_sql_test
-    msg = exec_python_script(File.join('nlp', 'mysql_sample.py'))
+    msg = exec_python_script(File.join('nlp', 'MySQLWrapper.py'))
     render :text => msg
   end
 
