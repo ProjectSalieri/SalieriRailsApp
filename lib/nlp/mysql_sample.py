@@ -9,7 +9,10 @@ class MySQLWrapper:
     def __init__(self):
         pass
 
-    def connect_by_json(self, json_file):
+    def connect(self):
+        pass
+
+    def connect_by_json(self, json_file = os.path.join( os.path.dirname(__file__), "mysql_info.json" )):
         json_content = ""
         with open(json_file, "r") as fin:
             json_content = json.loads(fin.read())
@@ -49,7 +52,7 @@ if __name__ == '__main__':
     mysql = MySQLWrapper()
     print("Start Connect")
     try:
-        mysql.connect_by_json(mysql_info_path)
+        mysql.connect_by_json()
         connection = mysql.connection
     except Exception as e:
         print("connection error")
