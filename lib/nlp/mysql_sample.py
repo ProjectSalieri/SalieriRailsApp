@@ -27,10 +27,10 @@ class MySQLWrapper:
     def _connect_by_info(self, info):
         try:
             self.connection = MySQLdb.connect(
-            db=mysql_info["db_name"],
-            user=mysql_info["user_name"],
-            passwd=mysql_info["password"],
-            host=mysql_info["host"])
+            db=info["db_name"],
+            user=info["user_name"],
+            passwd=info["password"],
+            host=info["host"])
         except Exception as e:
             raise e
         return True
