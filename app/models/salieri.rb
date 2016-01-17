@@ -16,6 +16,7 @@ class Salieri < ActiveRecord::Base
       next if noun == "名詞" && features[1] == "代名詞"
 
       base = features[6]
+      next if base == "*"
       ret << base
     }
     return ret
