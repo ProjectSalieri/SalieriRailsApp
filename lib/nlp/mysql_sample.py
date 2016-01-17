@@ -1,6 +1,32 @@
+# -*- coding: utf-8 -*-
+
 import MySQLdb
 import json
 import os
+
+class MySQLWrapper:
+
+    def __init__(self):
+        pass
+
+    def connect_by_json(self, json_file):
+        json_content = ""
+        with open(json_file, "r") as fin:
+            json_content = json.loads(fin.read())
+        return self._connect(json_content)
+
+    # MySQLへコネクト
+    # @param info { "db_name" : "", "user_name" : "", "password" : "", "host" : " }
+    def _connect(self, info):
+        try:
+            self.connection = MySQLdb.connect(
+            db=mysql_info["db_name"],
+            user=mysql_info["user_name"],
+            passwd=mysql_info["password"],
+            host=mysql_info["host"])
+        except Exception as e:
+            raise e
+        return True
 
 if __name__ == '__main__':
     print("MySQL test")
@@ -20,13 +46,11 @@ if __name__ == '__main__':
     mysql_info.update({"port" : port})
     print(mysql_info)
         
+    mysql = MySQLWrapper()
     print("Start Connect")
     try:
-        connection = MySQLdb.connect(
-            db=mysql_info["db_name"],
-            user=mysql_info["user_name"],
-            passwd=mysql_info["password"],
-            host=mysql_info["host"])
+        mysql.connect_by_json(mysql_info_path)
+        connection = mysql.connection
     except Exception as e:
         print("connection error")
         print(e.args)
