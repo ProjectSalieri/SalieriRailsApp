@@ -7,6 +7,9 @@
 %>
 
 <script type="text/javascript">
+<!-- -->
+function getMessageBox(){ return $("#message"); }
+
 <!-- 宛先を選択 -->
 function onchangeSendTo()
 {
@@ -14,7 +17,7 @@ function onchangeSendTo()
 	if( send_to == "" ){ return false; }
 
 	// @fixme 先頭からチェックして追加済みの宛先は無視する
-	var message_box = $("#message");
+	var message_box = getMessageBox();
 	var current_msg = message_box.val();
 	message_box.val(send_to + " " + current_msg);
 
@@ -24,7 +27,15 @@ function onchangeSendTo()
 <!-- カテゴリを選択 -->
 function onchangeCategory()
 {
+	var hash = $("#select_category").val();
+	if( hash == "" ){ return false; }
 
+	var message_box = getMessageBox();
+	var current_msg = message_box.val();
+	// @fixme hashの重複チェック
+	message_box.val(current_msg + " " + hash);
+
+	return true;
 }
 </script>
 
@@ -38,7 +49,7 @@ function onchangeCategory()
 		</tr>
 		<tr>
 		  <th>カテゴリ追加</th>
-		  <th><%= select_tag "", options_for_select(doc_categories.map { |c| ["「\##{c.name_jp}」追加", c.name_jp] }), {:include_blank => true, :onchange => "onchangeCategory()", :id => "select_category"} %></th>
+		  <th><%= select_tag "", options_for_select(doc_categories.map { |c| ["「\##{c.name_jp}」追加", "\##{c.name_jp}"] }), {:include_blank => true, :onchange => "onchangeCategory()", :id => "select_category"} %></th>
 		</tr>
 	  </tbody>
 	</table>
