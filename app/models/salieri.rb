@@ -104,6 +104,7 @@ class Salieri < ActiveRecord::Base
 
     cmd = "python #{File.join(Rails.root.to_s, 'lib', 'nlp', 'CategoryPredictor.py')}"
     value_array.each { |value| cmd += " #{value}" }
+#    3000.times { |i| cmd += " #{i}" }
     prediction = `#{cmd}`
 
     return prediction
