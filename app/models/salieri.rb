@@ -83,6 +83,32 @@ class Salieri < ActiveRecord::Base
     category.save
   end
 
+  # カテゴリ推定
+  def predict_category(document, category_type_name_en)
+    category_type = nil
+    parse_result = nil
+
+    # 形態素解析
+    if DocCategoryType.type_genre.name_en == category_type_name_en
+      category_type = DocCategoryType.type_genre
+      parse_results = parse_for_genre_categorize(document)
+    end
+
+    # 単語を数値に変換
+    value_array = []
+    words = Word.where(:doc_category_type_id => category_type.id)
+    parse_results.each { |result|
+      word = words.find_by({name: result})
+      value_array << word.value if word != nil && word.value != nil
+    }
+
+    cmd = "python #{File.join(Rails.root.to_s, 'lib', 'nlp', 'CategoryPredictor.py')}"
+    value_array.each { |value| cmd += " #{value}" }
+    prediction = `#{cmd}`
+
+    return prediction
+  end
+
   # コーパス再整理
   def corpus_arrange
     # 情報量計算

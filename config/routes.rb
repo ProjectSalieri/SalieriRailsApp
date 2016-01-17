@@ -59,6 +59,7 @@ Rails.application.routes.draw do
       get :talk_to
       get :read_news
       get :corpus_arrange
+      get :predict_category_test
     end
   end
 

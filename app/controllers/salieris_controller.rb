@@ -30,6 +30,13 @@ class SalierisController < ApplicationController
     render :text => post_msg
   end
 
+  def predict_category_test
+    salieri = Salieri.new()
+    doc = "科学技術の話をしてみる。機械とかITとかそんなのが引っかかる?"
+    
+    render :text => salieri.predict_category(doc, DocCategoryType.type_genre.name_en)
+  end
+
   # コーパス再整理
   def corpus_arrange
     salieri = Salieri.new()
