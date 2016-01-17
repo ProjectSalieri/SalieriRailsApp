@@ -1,6 +1,48 @@
 class Salieri < ActiveRecord::Base
+
+  include Data::MicrosoftNewsCrawler
   
   def self.twitter_account_name ; return "projectsalieri" ; end
+
+  # ニュースを読む
+  def read_news
+    # @todo カテゴリの選択を好みに応じて
+    news_category = DEFAULT_CATEGORIES.sample()[:name_en]
+    results = MicrosoftNewsFunction.get_url_catalog(news_category)
+
+    # @todo 一覧から選択する処理好みに応じて
+    url = results.sample[:url]
+    # 既読ニュース以外を選択
+    if Salieri::SalieriStringMemory.is_already_read(url)
+      url = nil
+      results.each { |result|
+        tmp_url = result[:url]
+        next if Salieri::SalieriStringMemory.is_already_read(tmp_url)
+        url = tmp_url
+        break
+      }
+    end
+
+    # 既読のニュースしかなかった
+    return "既読ニュースしかなかった" if url == nil
+
+    news_info = MicrosoftNewsFunction.get_news(url)
+
+    post_msg = "[Salieri]感想機能はまだ。自主的にニュース読むようにしたい\n#{news_info[:title]}\n#{url}"
+    if Rails.env.production? # @note production以外はtwitterの投稿を控える
+      salieri_user = TwitterAccount.find_by({:name_en => Salieri.twitter_account_name})
+      salieri_user.post(post_msg) 
+    end
+
+    # 既読チェック
+    Salieri::SalieriStringMemory.mark_read(url)
+
+    # 学習
+    parse_result = self.parse_for_genre_categorize(news_info[:content])
+    self.update_appear_count(parse_result, DocCategoryType.type_genre.name_en, news_category)
+
+    return post_msg
+  end
   
   # ジャンルカテゴライズのために形態素解析
   def parse_for_genre_categorize(document)

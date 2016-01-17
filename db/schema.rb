@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160116145751) do
+ActiveRecord::Schema.define(version: 20160117045800) do
 
   create_table "admin_string_tables", force: :cascade do |t|
     t.string   "key",        limit: 255
@@ -44,6 +44,13 @@ ActiveRecord::Schema.define(version: 20160116145751) do
     t.datetime "updated_at",             null: false
   end
 
+  create_table "salieri_salieri_string_memories", force: :cascade do |t|
+    t.string   "key",        limit: 255
+    t.text     "value",      limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
   create_table "salieris", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -60,11 +67,11 @@ ActiveRecord::Schema.define(version: 20160116145751) do
   end
 
   create_table "words", force: :cascade do |t|
-    t.string   "name",             limit: 255
-    t.integer  "value",            limit: 4
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.integer  "category_type_id", limit: 4
+    t.string   "name",                 limit: 255
+    t.integer  "value",                limit: 4
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.integer  "doc_category_type_id", limit: 4
   end
 
 end
