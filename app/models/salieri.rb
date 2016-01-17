@@ -83,6 +83,23 @@ class Salieri < ActiveRecord::Base
     category.save
   end
 
+  # コーパス再整理
+  def corpus_arrange
+    # 情報量計算
+
+    # valueの再割り当て ひとまず、シンプルに各CategoryType毎に順に番号振り
+    # @todo 情報量を元に不要な単語削除
+    DocCategoryType.all.each { |category_type|
+      words = Word.where(:doc_category_type_id => category_type.id)
+      cnt = 0
+      words.each { |word|
+        word.value = cnt
+        word.save
+        cnt += 1
+      }
+    }
+  end
+
   def parse(document)
     if @tagger == nil
       @tagger = init_tagger

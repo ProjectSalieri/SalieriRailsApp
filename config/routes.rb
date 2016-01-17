@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     collection do
       get :talk_to
       get :read_news
+      get :corpus_arrange
     end
   end
 

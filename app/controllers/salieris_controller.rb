@@ -22,11 +22,19 @@ class SalierisController < ApplicationController
     end
   end
 
-  # 
+  # ニュースを読む
   def read_news
     salieri = Salieri.new()
     post_msg = salieri.read_news()
 
     render :text => post_msg
+  end
+
+  # コーパス再整理
+  def corpus_arrange
+    salieri = Salieri.new()
+    salieri.corpus_arrange
+
+    render :text => "success"
   end
 end
