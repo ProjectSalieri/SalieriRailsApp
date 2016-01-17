@@ -17,7 +17,9 @@ class Salieri::TwittersController < ApplicationController
     msg = params[:message]
     user.post(msg)
 
-    render :text => "success"
+    respond_to do |format|
+      format.html { redirect_to salieri_twitters_new_tweet_path, :notice => "success" }
+    end
     
   end
 
