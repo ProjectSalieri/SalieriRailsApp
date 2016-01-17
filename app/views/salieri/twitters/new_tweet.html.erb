@@ -2,6 +2,7 @@
 
 <%
    doc_categories = DocCategory.where_type_genre
+   emotions = DocCategory.where_type_emotion
    # @fixme ログインユーザーのフォロワーを設定
    followers = TwitterAccount.where(:name_en => TwitterAccount.admin.name_en)
 %>
@@ -20,6 +21,20 @@ function onchangeSendTo()
 	var message_box = getMessageBox();
 	var current_msg = message_box.val();
 	message_box.val(send_to + " " + current_msg);
+
+	return true;
+}
+
+<!-- 感情を選択 -->
+function onchangeEmotion()
+{
+	var hash = $("#select_emotion").val();
+	if( hash == "" ){ return false; }
+
+	var message_box = getMessageBox();
+	var current_msg = message_box.val();
+	// @fixme hashの重複チェック
+	message_box.val(current_msg + " " + hash);
 
 	return true;
 }
@@ -50,6 +65,10 @@ function onchangeCategory()
 		<tr>
 		  <th>カテゴリ追加</th>
 		  <th><%= select_tag "", options_for_select(doc_categories.map { |c| ["「\##{c.name_jp}」追加", "\##{c.name_jp}"] }), {:include_blank => true, :onchange => "onchangeCategory()", :id => "select_category"} %></th>
+		</tr>
+		<tr>
+		  <th>感情追加</th>
+		  <th><%= select_tag "", options_for_select(emotions.map { |c| ["「\##{c.name_jp}」追加", "\##{c.name_jp}"] }), {:include_blank => true, :onchange => "onchangeEmotion()", :id => "select_emotion"} %></th>
 		</tr>
 	  </tbody>
 	</table>

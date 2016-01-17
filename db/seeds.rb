@@ -35,6 +35,16 @@ begin
   Data::MicrosoftNewsCrawler::DEFAULT_CATEGORIES.each { |category| 
     category_infos["Genre"] << { :name_en => category[:name_en], :name_jp => category[:name_jp], :doc_category_type_id => category_type.id } 
   }
+  category_type = DocCategoryType.type_emotion
+  emotion_arr = [ 
+                 {:name_en => "Happy", :name_jp => "嬉しい"},
+                 {:name_en => "Anger", :name_jp => "怒り"},
+                 {:name_en => "Sad", :name_jp => "悲しい"},
+                 {:name_en => "Joy", :name_jp => "楽しい"},
+                ]
+  emotion_arr.each { |emotion|
+    category_infos["Emotion"] << { :name_en => emotion[:name_en], :name_jp => emotion[:name_jp], :doc_category_type_id => category_type.id }
+  }
   category_infos.each { |type_name_en, category_info_arr|
     category_info_arr.each { |category_info|
       category = DocCategory.find_or_create_by(category_info)
