@@ -10,7 +10,21 @@
 <!-- 宛先を選択 -->
 function onchangeSendTo()
 {
-	alert("AAA");
+	var send_to = $("#select_send_to").val();
+	if( send_to == "" ){ return false; }
+
+	// @fixme 先頭からチェックして追加済みの宛先は無視する
+	var message_box = $("#message");
+	var current_msg = message_box.val();
+	message_box.val(send_to + " " + current_msg);
+
+	return true;
+}
+
+<!-- カテゴリを選択 -->
+function onchangeCategory()
+{
+
 }
 </script>
 
@@ -20,11 +34,11 @@ function onchangeSendTo()
 	  <tbody>
 		<tr>
 		  <th>宛先追加</th>
-		  <th><%= select_tag "", options_for_select(followers.map { |u| ["#{u.name_en}を追加", u.name_en] }), {:include_blank => true, :onchange => "onchangeSendTo()"} %></th>
+		  <th><%= select_tag "", options_for_select(followers.map { |u| ["#{u.name_en}を追加", "@#{u.name_en}"] }), {:include_blank => true, :onchange => "onchangeSendTo()", :id => "select_send_to"} %></th>
 		</tr>
 		<tr>
 		  <th>カテゴリ追加</th>
-		  <th><%= select_tag "", options_for_select(doc_categories.map { |c| ["「\##{c.name_jp}」追加", c.name_jp] }), :include_blank => true %></th>
+		  <th><%= select_tag "", options_for_select(doc_categories.map { |c| ["「\##{c.name_jp}」追加", c.name_jp] }), {:include_blank => true, :onchange => "onchangeCategory()", :id => "select_category"} %></th>
 		</tr>
 	  </tbody>
 	</table>
