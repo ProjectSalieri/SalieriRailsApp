@@ -2,10 +2,24 @@
 
 <%
    doc_categories = DocCategory.where_type_genre
+   # @fixme ログインユーザーのフォロワーを設定
+   followers = TwitterAccount.where(:name_en => TwitterAccount.admin.name_en)
 %>
 
 <%= form_tag(salieri_twitters_create_tweet_path) do |f| %>
 	<%= text_area_tag "message", "", :maxlength => "140", :rows => 4, :cols => 30, :style => "font-size:170%;" %><br>
-	<%= select_tag "", options_for_select(doc_categories.map { |c| ["「\##{c.name_jp}」追加", c.name_jp] }), :include_blank => true %>
+	<table border="2">
+	  <tbody>
+		<tr>
+		  <th>宛先追加</th>
+		  <th><%= select_tag "", options_for_select(followers.map { |u| ["#{u.name_en}を追加", u.name_en] }), :include_blank => true %></th>
+		</tr>
+		<tr>
+		  <th>カテゴリ追加</th>
+		  <th><%= select_tag "", options_for_select(doc_categories.map { |c| ["「\##{c.name_jp}」追加", c.name_jp] }), :include_blank => true %></th>
+		</tr>
+	  </tbody>
+	</table>
+	<br>
 	<%= submit_tag "ツイート" %>
 <% end %>
