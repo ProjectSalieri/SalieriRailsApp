@@ -38,11 +38,9 @@ class SalierisController < ApplicationController
     salieri_user.post(post_msg)
 
     # 学習
-=begin
     salieri = Salieri.new()
     parse_result = salieri.parse_for_genre_categorize(news_info[:content])
     salieri.update_appear_count(parse_result, DocCategoryType.type_genre.name_en, news_category)
-=end
 
     render :text => post_msg
     
