@@ -112,6 +112,21 @@ class Salieri < ActiveRecord::Base
 
   # コーパス再整理
   def corpus_arrange
+    # 出現頻度が低いwordの削除
+    prev_month = Time.now.prev_month
+    DocCategoryType.all.each { |category_type|
+      doc_categories = DocCategory.where(:doc_category_type_id => category_type.id)
+      doc_category_ids = doc_categories.pluck(:id).join(',')
+      words = Word.where(:doc_category_type_id => category_type.id)
+      words.each { |word|
+        # 一月以上更新されてない単語は削除
+        del_infos = DocCategoryInfo.where(:word_id => word.id).where("doc_category_id in (#{doc_category_ids})").where("updated_at <= ?", prev_month)
+        next if del_infos.blank?
+        del_infos.each { |del_info| del_info.destroy }
+        word.destroy
+      }
+    }
+
     # 情報量計算
 
     # valueの再割り当て ひとまず、シンプルに各CategoryType毎に順に番号振り
@@ -125,6 +140,7 @@ class Salieri < ActiveRecord::Base
         cnt += 1
       }
     }
+
   end
 
   def parse(document)
