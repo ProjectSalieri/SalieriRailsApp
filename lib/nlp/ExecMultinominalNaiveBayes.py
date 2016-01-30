@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 import pickle
 
 from MySQLWrapper import MySQLWrapper
@@ -15,6 +16,9 @@ class CategoryData:
         self.category_appear_counts = []		# 各カテゴリの出現回数
         self.word_appear_count_sum = [] 	# 各カテゴリの単語出現の総回数
         self.word_appear_counts = []			# 各カテゴリ毎の単語出現回数
+
+def create_picle_path():
+    return os.path.join(os.path.dirname(__file__), "MultinominalModelNaiveBayes.pickle")
 
 # DocCategoryTypeのid取得
 def get_category_type_id_from_db(mysql, name_en):
@@ -104,8 +108,7 @@ def learn(category_type):
             multinominal_model.set(w_idx, numerator/denominator)
 
     # シリアライズ
-    import os
-    file_path = os.path.join(os.path.dirname(__file__), "MultinominalModelNaiveBayes.pickle")
+    file_path = create_picle_path()
     with open(file_path, "wb") as fout:
         pickle.dump(model, fout)    
 
@@ -115,11 +118,15 @@ if __name__ == '__main__':
 
     argvs = sys.argv
 
-    if argvs[1] == "--predict":
-        print("predict")
-    elif argvs[1] == "--learn":
-        # cateogry_type = argvs[2]
+    pickle_path = create_picle_path()
+    is_exist_pickle = os.path.exists(pickle_path)
+
+    if argvs[1] == "--learn" or is_exist_pickle == False:
         category_type = "Genre"
         learn(category_type)
+
+    if argvs[1] == "--predict":
+        print("predict")
+
 
         
