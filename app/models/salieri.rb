@@ -154,12 +154,13 @@ class Salieri < ActiveRecord::Base
     DocCategoryType.all.each { |category_type|
       doc_categories = DocCategory.where(:doc_category_type_id => category_type.id)
       doc_category_ids = doc_categories.pluck(:id).join(',')
-      words = Word.where(:doc_category_type_id => category_type.id)
+
+      words = Word.where(:doc_category_type_id => category_type.id).includes(:doc_category_infos).where("doc_category_infos.updated_at <= ?", prev_month).references(:doc_category_infos)
       words.each { |word|
-        # 一月以上更新されてない単語は削除
-        del_infos = DocCategoryInfo.where(:word_id => word.id).where("doc_category_id in (#{doc_category_ids})").where("updated_at <= ?", prev_month)
-        next if del_infos.blank?
-        del_infos.each { |del_info| del_info.destroy }
+        # 一つでも最近更新されていれば削除しない
+        next unless word.doc_category_infos.where("updated_at > ?", prev_month).blank?
+        # 全てのカテゴリで一月以上更新されてない単語は削除
+        word.doc_category_infos.each { |del_info| del_info.destroy }
         word.destroy
       }
     }
