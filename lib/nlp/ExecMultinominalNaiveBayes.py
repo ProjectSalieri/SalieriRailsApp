@@ -4,6 +4,8 @@ import sys
 import os
 import pickle
 
+import numpy as np
+
 from MySQLWrapper import MySQLWrapper
 from MultinominalModelNaiveBayes import MultinominalModelNaiveBayes
 
@@ -20,6 +22,20 @@ class CategoryData:
 def create_picle_path():
     return os.path.join(os.path.dirname(__file__), "MultinominalModelNaiveBayes.pickle")
 
+# MySQLWrapperの初期化
+def init_mysql():
+    # データのロード
+    mysql = MySQLWrapper()
+    try:
+        mysql.connect()
+    except Exception as e:
+        print("connection error")
+        print(e.args)
+        import sys
+        sys.exit(1)
+
+    return mysql
+
 # DocCategoryTypeのid取得
 def get_category_type_id_from_db(mysql, name_en):
     sql_cmd = "select id from doc_category_types where doc_category_types.name_en = '%s'" % (category_type)
@@ -28,6 +44,13 @@ def get_category_type_id_from_db(mysql, name_en):
 # 指定idのDocCategoryTypeの単語数取得
 def get_word_num_from_db(mysql, category_type_id):
     sql_cmd = "select count(*) from words where doc_category_type_id = %d" % (category_type_id)
+    return mysql.exec_sql_cmd(sql_cmd)[0][0]
+# 指定idのDocCategoryTypeに対して、カテゴリーの配列インデックスからデータベース情報DocCategoryのIDを取得
+def get_category_name_en_from_db(mysql, category_type_id, category_array_id):
+    sql_cmd = "select id from doc_categories where doc_categories.doc_category_type_id = %d order by id" % (category_type_id)
+    results = mysql.exec_sql_cmd(sql_cmd)
+    category_id = results[category_array_id][0]
+    sql_cmd = "select name_en from doc_categories where doc_categories.id = %d" % (category_id)
     return mysql.exec_sql_cmd(sql_cmd)[0][0]
 
 # 指定idのDocCategoryTypeのカテゴリ情報を生成
@@ -38,7 +61,7 @@ def create_category_data_from_db(mysql, category_type_id):
     word_num = get_word_num_from_db(mysql, category_type_id)
     category_data.word_num = word_num
 
-    sql_cmd = "select id, appear_count from doc_categories where doc_categories.doc_category_type_id = %d" % (category_type_id)
+    sql_cmd = "select id, appear_count from doc_categories where doc_categories.doc_category_type_id = %d order by id" % (category_type_id)
     results = mysql.exec_sql_cmd(sql_cmd)
     category_ids = []
     document_num = 0
@@ -68,14 +91,7 @@ def create_category_data_from_db(mysql, category_type_id):
 
 def learn(category_type):
     # データのロード
-    mysql = MySQLWrapper()
-    try:
-        mysql.connect()
-    except Exception as e:
-        print("connection error")
-        print(e.args)
-        import sys
-        sys.exit(1)
+    mysql = init_mysql()
 
     # DocCategoryTypeのid取得
     category_type_id = get_category_type_id_from_db(mysql, category_type)
@@ -112,21 +128,35 @@ def learn(category_type):
     with open(file_path, "wb") as fout:
         pickle.dump(model, fout)    
 
+def create_model():
+    model = None
+    file_path = create_picle_path()
+    with open(file_path, "rb") as fin:
+        model = pickle.load(fin)
+    return model
+
 
 # 実行main
 if __name__ == '__main__':
 
     argvs = sys.argv
 
+    category_type = "Genre"
+
     pickle_path = create_picle_path()
     is_exist_pickle = os.path.exists(pickle_path)
 
     if argvs[1] == "--learn" or is_exist_pickle == False:
-        category_type = "Genre"
         learn(category_type)
 
     if argvs[1] == "--predict":
-        print("predict")
-
-
+        argvc = len(argvs)
+        input_data = np.array([0]*(argvc-2))
+        for i in range(2,argvc):
+            input_data[i-2] = argvs[i]
         
+        model = create_model()
+        category_array_id = model.decide(input_data)
+        mysql = init_mysql()
+        category_type_id = get_category_type_id_from_db(mysql, category_type)
+        print(get_category_name_en_from_db(mysql, category_type_id, category_array_id))
