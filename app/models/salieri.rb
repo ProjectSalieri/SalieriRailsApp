@@ -99,9 +99,8 @@ class Salieri < ActiveRecord::Base
 
     cmd = "python #{File.join(Salieri.nlp_dir, 'ExecMultinominalNaiveBayes.py')} --predict"
     value_array.each { |value| cmd += " #{value}" }
-    predict_category_id = `#{cmd}`
-    puts cmd
-    prediction = DocCategory.find_by({:id => predict_category_id, :doc_category_type_id => category_type.id})
+    predict_category_name_en = `#{cmd}`.split("\n")[0]
+    prediction = DocCategory.find_by({:name_en => predict_category_name_en, :doc_category_type_id => category_type.id}).name_jp
 
     return prediction
   end

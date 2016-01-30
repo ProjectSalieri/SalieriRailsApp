@@ -32,13 +32,24 @@ class SalierisController < ApplicationController
 
   def predict_category
     salieri = Salieri.new()
-    doc = "科学技術の話をしてみる。機械とかITとかそんなのが引っかかる?"
+    doc = params[:text]
     
     render :text => salieri.predict_category(doc, DocCategoryType.type_genre.name_en)
   end
 
   # コーパス再整理
   def arrange_memory
+    # @fixme 必要なくなったら消す
+    DocCategoryType.all.each { |doc_category_type|
+      doc_categories = DocCategory.where(:doc_category_type => doc_category_type.id)
+      words = Word.where(:doc_category_type_id => doc_category_type.id)
+      words.each { |word|
+        doc_categories.each { |doc_category|
+          DocCategoryInfo.find_or_create_by({:doc_category_id => doc_category.id, word_id: word.id})
+        }
+      }
+    }
+
     salieri = Salieri.new()
     salieri.arrange_memory
 
