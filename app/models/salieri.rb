@@ -97,7 +97,7 @@ class Salieri < ActiveRecord::Base
       value_array << word.value if word != nil && word.value != nil
     }
 
-    cmd = "python #{File.join(Salieri.nlp_dir, 'ExecMultinominalNaiveBayes.py')} --predict"
+    cmd = "python #{File.join(Salieri.nlp_dir, 'ExecMultinominalModelNaiveBayes.py')} --predict"
     value_array.each { |value| cmd += " #{value}" }
     predict_category_name_en = `#{cmd}`.split("\n")[0]
     prediction = DocCategory.find_by({:name_en => predict_category_name_en, :doc_category_type_id => category_type.id}).name_jp
