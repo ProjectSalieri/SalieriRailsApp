@@ -59,7 +59,7 @@ Rails.application.routes.draw do
       get :talk_to
       get :read_news
       get :arrange_memory
-      get :predict_category_test
+      get :predict_category
     end
   end
 

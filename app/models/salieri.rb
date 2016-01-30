@@ -73,21 +73,9 @@ class Salieri < ActiveRecord::Base
     category.appear_count += 1
 
     parse_result.each { |w|
-      word = Word.find_or_create_by({name: w, doc_category_type_id: category_type.id})
-      category_info = DocCategoryInfo.find_or_create_by({doc_category_id: category.id, word_id: word.id})
-      appear_count = category_info.appear_count == nil ? 1 : category_info.appear_count + 1
-      category_info.appear_count = appear_count
-      category_info.save # categoryのdoc_category_infosを直接変更しないと、findするたびに新しいインスタンスになってしまうのでこまめなsaveが必要になってる
+      DocCategoryInfo.update_appear_count(category_type.id, category.id, w)
     }
-
     category.save
-  end
-
-  # カテゴリーデータを外部出力
-  def dump_category_data
-    DocCategoryType.all.each { |category_type|
-      
-    }
   end
 
   # カテゴリ推定
@@ -109,10 +97,11 @@ class Salieri < ActiveRecord::Base
       value_array << word.value if word != nil && word.value != nil
     }
 
-    cmd = "python #{File.join(Salieri.nlp_dir, 'CategoryPredictor.py')}"
+    cmd = "python #{File.join(Salieri.nlp_dir, 'ExecMultinominalNaiveBayes.py')} --predict"
     value_array.each { |value| cmd += " #{value}" }
-#    3000.times { |i| cmd += " #{i}" }
-    prediction = `#{cmd}`
+    predict_category_id = `#{cmd}`
+    puts cmd
+    prediction = DocCategory.find_by({:id => predict_category_id, :doc_category_type_id => category_type.id})
 
     return prediction
   end

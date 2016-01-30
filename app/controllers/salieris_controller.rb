@@ -30,7 +30,7 @@ class SalierisController < ApplicationController
     render :text => post_msg
   end
 
-  def predict_category_test
+  def predict_category
     salieri = Salieri.new()
     doc = "科学技術の話をしてみる。機械とかITとかそんなのが引っかかる?"
     
