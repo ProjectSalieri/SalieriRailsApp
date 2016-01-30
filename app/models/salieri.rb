@@ -83,6 +83,13 @@ class Salieri < ActiveRecord::Base
     category.save
   end
 
+  # カテゴリーデータを外部出力
+  def dump_category_data
+    DocCategoryType.all.each { |category_type|
+      
+    }
+  end
+
   # カテゴリ推定
   def predict_category(document, category_type_name_en)
     category_type = nil
@@ -102,7 +109,7 @@ class Salieri < ActiveRecord::Base
       value_array << word.value if word != nil && word.value != nil
     }
 
-    cmd = "python #{File.join(Rails.root.to_s, 'lib', 'nlp', 'CategoryPredictor.py')}"
+    cmd = "python #{File.join(Salieri.nlp_dir, 'CategoryPredictor.py')}"
     value_array.each { |value| cmd += " #{value}" }
 #    3000.times { |i| cmd += " #{i}" }
     prediction = `#{cmd}`
@@ -110,8 +117,48 @@ class Salieri < ActiveRecord::Base
     return prediction
   end
 
+  # 保存データの整理
+  def arrange_memory
+    # StringMemoryの整理
+
+    # コーパスの整理
+    arrange_corpus
+  end
+
+  def parse(document)
+    if @tagger == nil
+      @tagger = Salieri.init_tagger
+    end
+
+    return @tagger.parse(document)
+  end
+
+  private
+
+  def self.nlp_dir
+    return File.join(Rails.root.to_s, "lib", "nlp")
+  end
+
+  # taggerの初期化
+  def self.init_tagger
+    ipadic_path = File.join(Salieri.nlp_dir, "ipadic")
+
+    # 解凍済みファイルは重いので初回のみ解凍
+    if File.exist?(ipadic_path) == false
+      require "zip/zip"
+      Zip::ZipFile.open("#{ipadic_path}.zip") do |zip|
+        zip.each do |entry|
+          # { true } は展開先に同名ファイルが存在する場合に上書きする指定
+          zip.extract(entry, File.join(File.dirname(ipadic_path), entry.to_s)) { true }
+          end
+      end
+    end
+
+    return Igo::Tagger.new(ipadic_path)
+  end
+
   # コーパス再整理
-  def corpus_arrange
+  def arrange_corpus
     # 出現頻度が低いwordの削除
     prev_month = Time.now.prev_month
     DocCategoryType.all.each { |category_type|
@@ -141,33 +188,5 @@ class Salieri < ActiveRecord::Base
       }
     }
 
-  end
-
-  def parse(document)
-    if @tagger == nil
-      @tagger = init_tagger
-    end
-
-    return @tagger.parse(document)
-  end
-
-  private
-
-  # taggerの初期化
-  def init_tagger
-    ipadic_path = File.join(Rails.root.to_s, "lib", "nlp", "ipadic")
-
-    # 解凍済みファイルは重いので初回のみ解凍
-    if File.exist?(ipadic_path) == false
-      require "zip/zip"
-      Zip::ZipFile.open("#{ipadic_path}.zip") do |zip|
-        zip.each do |entry|
-          # { true } は展開先に同名ファイルが存在する場合に上書きする指定
-          zip.extract(entry, File.join(File.dirname(ipadic_path), entry.to_s)) { true }
-          end
-      end
-    end
-
-    return Igo::Tagger.new(ipadic_path)
   end
 end

@@ -38,9 +38,9 @@ class SalierisController < ApplicationController
   end
 
   # コーパス再整理
-  def corpus_arrange
+  def arrange_memory
     salieri = Salieri.new()
-    salieri.corpus_arrange
+    salieri.arrange_memory
 
     render :text => "success"
   end
