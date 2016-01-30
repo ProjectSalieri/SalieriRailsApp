@@ -18,6 +18,8 @@ doc/
 .idea
 .secret
 
+lib/twitter/get_access_token_sample.rb
+lib/nlp/*.pyc
+lib/nlp/*.pickle
 lib/nlp/ipadic
 lib/nlp/mysql_info.json
-lib/twitter/get_access_token_sample.rb

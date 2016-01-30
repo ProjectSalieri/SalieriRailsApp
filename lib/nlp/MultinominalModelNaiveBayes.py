@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import numpy as np
+
+from MultinominalModel import MultinominalModel
+
 # NaiveBayes + MultinominalModel
-class MultinominalModelBayes:
+class MultinominalModelNaiveBayes:
 
     # コンストラクタ
     # @param v_num 単語数
