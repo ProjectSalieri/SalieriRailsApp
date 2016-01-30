@@ -28,7 +28,9 @@ class Salieri < ActiveRecord::Base
 
     news_info = MicrosoftNewsFunction.get_news(url)
 
-    post_msg = "[Salieri]感想機能はまだ。自主的にニュース読むようにしたい\n#{news_info[:title]}\n#{url}"
+    prediction = predict_category(news_info[:content], DocCategoryType.type_genre.name_en)
+
+    post_msg = "[Salieri]#{prediction}の話題?\n#{news_info[:title]}\n#{url}"
     if Rails.env.production? # @note production以外はtwitterの投稿を控える
       salieri_user = TwitterAccount.find_by({:name_en => Salieri.twitter_account_name})
       salieri_user.post(post_msg) 

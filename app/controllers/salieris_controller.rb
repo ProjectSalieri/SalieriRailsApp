@@ -40,6 +40,7 @@ class SalierisController < ApplicationController
   # コーパス再整理
   def arrange_memory
     # @fixme 必要なくなったら消す
+=begin
     DocCategoryType.all.each { |doc_category_type|
       doc_categories = DocCategory.where(:doc_category_type => doc_category_type.id)
       words = Word.where(:doc_category_type_id => doc_category_type.id)
@@ -49,6 +50,7 @@ class SalierisController < ApplicationController
         }
       }
     }
+=end
 
     salieri = Salieri.new()
     salieri.arrange_memory
