@@ -35,13 +35,11 @@
   </thead>
 
   <tbody>
-	<% @word_names.each do |word_name| %>
+	<% @words.each do |word| %>
 	<tr>
-	  <th><%= word_name %></th>
-	  <% word = Word.find_by({:name => word_name, :doc_category_type_id => @doc_category_type.id}) %>
+	  <th><%= word.name %></th>
 	  <th><%= word.value %></th>
-	  <% doc_categories.each do |doc_category| %>
-	  	<% word_info = DocCategoryInfo.find_by({:doc_category_id => doc_category.id, :word_id => word.id}) %>
+	  <% word.doc_category_infos.each do |word_info| %>
 	  <th><%= word_info == nil ? 0 : word_info.appear_count %></th>
 	  <% end %>
 	</tr>
