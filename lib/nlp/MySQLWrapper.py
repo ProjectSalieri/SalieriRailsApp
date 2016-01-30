@@ -7,6 +7,8 @@ import os
 class MySQLWrapper:
 
     def __init__(self):
+        self.connection = None
+        self.cursor = None
         pass
 
     def connect(self):
@@ -21,6 +23,20 @@ class MySQLWrapper:
             return self._connect_by_info(sql_info)
         else:
             return self._connect_by_json()
+
+    def close(self):
+        self.connection.close()
+
+    def exec_sql_cmd(self, sql_cmd, opt = {"fetch_opt" : "all"}):
+        self.cursor = self.connection.cursor()
+        self.cursor.execute(sql_cmd)
+        results = None
+        if opt["fetch_opt"] == "all":
+            results = self.cursor.fetchall()
+        elif opt["fetch_opt"] == "one":
+            results = self.cursor.fetchone()
+        self.cursor.close()
+        return results
 
     # MySQLへコネクト
     # @param info { "db_name" : "", "user_name" : "", "password" : "", "host" : " }
