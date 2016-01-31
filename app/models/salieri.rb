@@ -47,7 +47,12 @@ class Salieri < ActiveRecord::Base
   end
 
   def read_twitter_timeline
-    return parse_for_emotion_categorize("サッカーは楽しくない思う")
+    document = "サッカーは楽しくない思う"
+    prediction = predict_category(document, DocCategoryType.type_emotion.name_en)
+
+    post_msg = "[Salieri]#{prediction}な話題?\n"
+
+    return post_msg
   end
   
   # ジャンルカテゴライズのために形態素解析
@@ -118,6 +123,9 @@ class Salieri < ActiveRecord::Base
     if DocCategoryType.type_genre.name_en == category_type_name_en
       category_type = DocCategoryType.type_genre
       parse_results = parse_for_genre_categorize(document)
+    elsif DocCategoryType.type_emotion.name_en == category_type_name_en
+      category_type = DocCategoryType.type_emotion
+      parse_results = parse_for_emotion_categorize(document)
     end
 
     # 単語を数値に変換
@@ -129,7 +137,7 @@ class Salieri < ActiveRecord::Base
       value_array << word_info[1] if word_info[1] != nil
     }
 
-    cmd = "python #{File.join(Salieri.nlp_dir, 'ExecMultinominalModelNaiveBayes.py')} --predict"
+    cmd = "python #{File.join(Salieri.nlp_dir, 'ExecMultinominalModelNaiveBayes.py')} --predict --category_type #{category_type_name_en}"
     value_array.each { |value| cmd += " #{value}" }
     predict_category_name_en = `#{cmd}`.split("\n")[0]
     return "なんの話題かわからない" unless $? == 0
