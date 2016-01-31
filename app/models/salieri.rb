@@ -106,17 +106,19 @@ class Salieri < ActiveRecord::Base
     invalid_words = ["*"]
 
     t = parse(document)
+    last_check_word = nil
     t.each { |m|
       features = m.feature.split(",")
       noun = features[0]
+      base = features[6]
+      last_check_word = base
       next if noun_list.include?(noun) == false
       next if noun == "名詞" && features[1] == "代名詞"
 
-      base = features[6]
       next if invalid_words.include?(base)
       if noun == "助動詞"
         next if base != "ない"
-        ret[-1] = ret[-1] + base  # 直前の単語の否定版
+        ret[-1] = ret[-1] + base  if ret[-1] == last_check_word # 直前の単語の否定版
         next
       end
       ret << base
