@@ -9,6 +9,7 @@ class DocCategoryInfo < ActiveRecord::Base
 
   # 出現カウントの更新
   def self.update_appear_counts(category_type_id, category_id, word_names)
+    word_names.each { |w| Word.find_or_create_by({:name => w, :doc_category_type_id => category_type_id}) } # @fixme? 高速化
     word_infos = Word.where(:doc_category_type_id => category_type_id).where("name in (#{word_names.map{ |w| "\'#{w}\'" }.join(',')})").pluck(:id, :name)
     category_ids = DocCategory.where(:doc_category_type_id => category_type_id).pluck(:id)
 
