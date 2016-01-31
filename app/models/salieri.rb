@@ -45,12 +45,17 @@ class Salieri < ActiveRecord::Base
 
     return post_msg
   end
+
+  def read_twitter_timeline
+    return parse_for_emotion_categorize("サッカーは楽しくない思う")
+  end
   
   # ジャンルカテゴライズのために形態素解析
   def parse_for_genre_categorize(document)
     ret = []
 
     noun_list = ["名詞", "動詞"]
+    invalid_words = ["*"]
 
     t = parse(document)
     t.each { |m|
@@ -60,7 +65,33 @@ class Salieri < ActiveRecord::Base
       next if noun == "名詞" && features[1] == "代名詞"
 
       base = features[6]
-      next if base == "*"
+      next if invalid_words.include?(base)
+      ret << base
+    }
+    return ret
+  end
+
+  # 感情カテゴライズのために形態素解析
+  def parse_for_emotion_categorize(document)
+    ret = []
+
+    noun_list = ["名詞", "形容詞", "助動詞"]
+    invalid_words = ["*"]
+
+    t = parse(document)
+    t.each { |m|
+      features = m.feature.split(",")
+      noun = features[0]
+      next if noun_list.include?(noun) == false
+      next if noun == "名詞" && features[1] == "代名詞"
+
+      base = features[6]
+      next if invalid_words.include?(base)
+      if noun == "助動詞"
+        next if base != "ない"
+        ret[-1] = ret[-1] + base  # 直前の単語の否定版
+        next
+      end
       ret << base
     }
     return ret

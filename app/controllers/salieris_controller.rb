@@ -30,6 +30,14 @@ class SalierisController < ApplicationController
     render :text => post_msg
   end
 
+  # Twitterタイムラインを読む
+  def read_twitter_timeline
+    salieri = Salieri.new()
+    post_msg = salieri.read_twitter_timeline()
+
+    render :text => post_msg
+  end
+
   def predict_category
     salieri = Salieri.new()
     doc = params[:text]
