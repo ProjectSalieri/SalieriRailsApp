@@ -41,6 +41,8 @@ begin
                  {:name_en => "Anger", :name_jp => "怒り"},
                  {:name_en => "Sad", :name_jp => "悲しい"},
                  {:name_en => "Joy", :name_jp => "楽しい"},
+                 {:name_en => "Like", :name_jp => "好き"},
+                 {:name_en => "Hate", :name_jp => "嫌い"},
                 ]
   emotion_arr.each { |emotion|
     category_infos["Emotion"] << { :name_en => emotion[:name_en], :name_jp => emotion[:name_jp], :doc_category_type_id => category_type.id }

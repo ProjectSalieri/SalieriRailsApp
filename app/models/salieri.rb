@@ -47,10 +47,19 @@ class Salieri < ActiveRecord::Base
   end
 
   def read_twitter_timeline
-    document = "サッカーは楽しくない思う"
-    prediction = predict_category(document, DocCategoryType.type_emotion.name_en)
+    document = "経済の話題は楽しくない思う #嫌い #経済"
+    hash_tags = TwitterAccount.extract_hash_tags(document)
+    hash_tags.each { |tag| document.gsub!(" #{tag}", "") } # ハッシュタグを除去
 
+    prediction = predict_category(document, DocCategoryType.type_emotion.name_en)
     post_msg = "[Salieri]#{prediction}な話題?\n"
+
+    # ハッシュタグをもとに学習
+    emotion_categories = DocCategory.where(:doc_category_type_id => DocCategoryType.type_emotion.id).where("name_jp in (#{hash_tags.map{ |t| "'#{t}'"}.join(',')})")
+    if emotion_categories.blank? == false
+      parse_result = self.parse_for_emotion_categorize(document)
+      self.update_appear_count(parse_result, DocCategoryType.type_emotion.name_en, emotion_categories.first.name_en)
+    end
 
     return post_msg
   end

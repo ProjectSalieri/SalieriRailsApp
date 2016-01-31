@@ -25,6 +25,10 @@ class TwitterAccount < ActiveRecord::Base
     return Twitter::TwitterUtil::post(@accessor, text, post_options)
   end
 
+  def self.extract_hash_tags(tweet_content)
+    return tweet_content.scan(/\s\#([^\s]*)/).map{ |t| t[0] }
+  end
+
   private
   def login
     return true if @accessor != nil
