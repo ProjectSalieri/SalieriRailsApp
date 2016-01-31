@@ -54,7 +54,9 @@ class Salieri < ActiveRecord::Base
     home_timelines.each { |home_timeline|
       next if home_timeline.screen_name == salieri_user.name_en # 自分の投稿は無視
 
-      # @fixme 既読のツイートはスルー
+      # 既読のツイートはスルー
+      next if Salieri::SalieriStringMemory.is_already_read_tweet(home_timeline.id)
+      Salieri::SalieriStringMemory.mark_read_tweet(home_timeline.id)
 
       tweet_text = home_timeline.text.dup
       hash_tags = TwitterAccount.extract_hash_tags(tweet_text)
