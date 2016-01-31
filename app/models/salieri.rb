@@ -32,7 +32,7 @@ class Salieri < ActiveRecord::Base
 
     post_msg = "[Salieri]#{prediction}の話題?\n#{news_info[:title]}\n#{url}"
     if Rails.env.production? # @note production以外はtwitterの投稿を控える
-      salieri_user = TwitterAccount.find_by({:name_en => Salieri.twitter_account_name})
+      salieri_user = Salieri.get_salieri_twitter_account
       salieri_user.post(post_msg) 
     end
 
@@ -47,21 +47,32 @@ class Salieri < ActiveRecord::Base
   end
 
   def read_twitter_timeline
-    document = "経済の話題は楽しくない思う #嫌い #経済"
-    hash_tags = TwitterAccount.extract_hash_tags(document)
-    hash_tags.each { |tag| document.gsub!(" #{tag}", "") } # ハッシュタグを除去
+    salieri_user = Salieri.get_salieri_twitter_account
+    home_timelines = salieri_user.home_timelines
 
-    prediction = predict_category(document, DocCategoryType.type_emotion.name_en)
-    post_msg = "[Salieri]#{prediction}な話題?\n"
+    post_messages = []
+    home_timelines.each { |home_timeline|
+      next if home_timeline.screen_name == salieri_user.name_en # 自分の投稿は無視
 
-    # ハッシュタグをもとに学習
-    emotion_categories = DocCategory.where(:doc_category_type_id => DocCategoryType.type_emotion.id).where("name_jp in (#{hash_tags.map{ |t| "'#{t}'"}.join(',')})")
-    if emotion_categories.blank? == false
-      parse_result = self.parse_for_emotion_categorize(document)
-      self.update_appear_count(parse_result, DocCategoryType.type_emotion.name_en, emotion_categories.first.name_en)
-    end
+      # @fixme 既読のツイートはスルー
 
-    return post_msg
+      tweet_text = home_timeline.text.dup
+      hash_tags = TwitterAccount.extract_hash_tags(tweet_text)
+      hash_tags.each { |tag| tweet_text.gsub!(" #{tag}", "") } # ハッシュタグを除去
+
+      prediction = predict_category(tweet_text, DocCategoryType.type_emotion.name_en)
+      post_msg = "[Salieri]#{prediction}な話題?\n#{tweet_text}\n"
+      post_messages << post_msg
+
+      # ハッシュタグをもとに学習
+      emotion_categories = hash_tags.size != 0 ? DocCategory.where(:doc_category_type_id => DocCategoryType.type_emotion.id).where("name_jp in (#{hash_tags.map{ |t| "'#{t}'"}.join(',')})") : DocCategory.none
+      if emotion_categories.blank? == false
+        parse_result = self.parse_for_emotion_categorize(tweet_text)
+        self.update_appear_count(parse_result, DocCategoryType.type_emotion.name_en, emotion_categories.first.name_en)
+      end
+    }
+
+    return post_messages
   end
   
   # ジャンルカテゴライズのために形態素解析
@@ -175,6 +186,10 @@ class Salieri < ActiveRecord::Base
 
   def self.nlp_dir
     return File.join(Rails.root.to_s, "lib", "nlp")
+  end
+
+  def self.get_salieri_twitter_account
+    return TwitterAccount.find_by({:name_en => Salieri.twitter_account_name})
   end
 
   # taggerの初期化
