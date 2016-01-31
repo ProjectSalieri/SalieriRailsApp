@@ -141,20 +141,35 @@ if __name__ == '__main__':
 
     argvs = sys.argv
 
+    cmd = None
     category_type = "Genre"
+    input_data = np.array([])
+    is_exist_opt = False
+    for i in range(len(argvs)):
+        if i == 0:
+            continue
+
+        if is_exist_opt:
+            is_exist_opt = False
+            continue
+
+        if argvs[i] == "--learn":
+            cmd = "learn"
+        elif argvs[i] == "--predict":
+            cmd = "predict"
+        elif argvs[i] == "--category_type":
+            category_type = argvs[i+1]
+            is_exist_opt = True
+        else:
+            input_data = np.append(input_data, [(int)(argvs[i])])
 
     pickle_path = create_picle_path()
     is_exist_pickle = os.path.exists(pickle_path)
 
-    if argvs[1] == "--learn" or is_exist_pickle == False:
+    if cmd == "learn" or is_exist_pickle == False:
         learn(category_type)
 
-    if argvs[1] == "--predict":
-        argvc = len(argvs)
-        input_data = np.array([0]*(argvc-2))
-        for i in range(2,argvc):
-            input_data[i-2] = argvs[i]
-        
+    if cmd == "predict":
         model = create_model()
         category_array_id = model.decide(input_data)
         mysql = init_mysql()

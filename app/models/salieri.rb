@@ -74,9 +74,7 @@ class Salieri < ActiveRecord::Base
     # カテゴリの出現頻度更新
     category.appear_count += 1
 
-    parse_result.each { |w|
-      DocCategoryInfo.update_appear_count(category_type.id, category.id, w)
-    }
+    DocCategoryInfo.update_appear_counts(category_type.id, category.id, parse_result)
     category.save
   end
 
