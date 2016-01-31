@@ -91,10 +91,11 @@ class Salieri < ActiveRecord::Base
 
     # 単語を数値に変換
     value_array = []
-    words = Word.where(:doc_category_type_id => category_type.id).all
-    parse_results.each { |result|
-      word = words.find_by({name: result})
-      value_array << word.value if word != nil && word.value != nil
+    word_infos = Word.where(:doc_category_type_id => category_type.id).where("name in (#{parse_results.map{ |w| "'#{w}'"}.join(',')})").pluck(:name, :value)
+    word_infos.each { |word_info|
+      word_name = word_info[0]
+      next unless parse_results.include?(word_name)
+      value_array << word_info[1] if word_info[1] != nil
     }
 
     cmd = "python #{File.join(Salieri.nlp_dir, 'ExecMultinominalModelNaiveBayes.py')} --predict"
