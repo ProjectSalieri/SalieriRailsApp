@@ -20,8 +20,8 @@ class CategoryData:
         self.word_appear_count_sum = [] 	# 各カテゴリの単語出現の総回数
         self.word_appear_counts = []			# 各カテゴリ毎の単語出現回数
 
-def create_picle_path():
-    return os.path.join(os.path.dirname(__file__), "MultinominalModelNaiveBayes.pickle")
+def create_pickle_path(category_type_name_en):
+    return os.path.join(os.path.dirname(__file__), "MultinominalModelNaiveBayes%s.pickle" % (category_type_name_en))
 
 # 指定idのDocCategoryTypeのカテゴリ情報を生成
 def create_category_data_from_db(mysql, category_type_id):
@@ -94,13 +94,13 @@ def learn(category_type):
             multinominal_model.set(w_idx, numerator/denominator)
 
     # シリアライズ
-    file_path = create_picle_path()
+    file_path = create_pickle_path(category_type)
     with open(file_path, "wb") as fout:
         pickle.dump(model, fout)    
 
-def create_model():
+def create_model(category_type):
     model = None
-    file_path = create_picle_path()
+    file_path = create_pickle_path(category_type)
     with open(file_path, "rb") as fin:
         model = pickle.load(fin)
     return model
@@ -133,14 +133,14 @@ if __name__ == '__main__':
         else:
             input_data = np.append(input_data, [(int)(argvs[i])])
 
-    pickle_path = create_picle_path()
+    pickle_path = create_pickle_path(category_type)
     is_exist_pickle = os.path.exists(pickle_path)
 
     if cmd == "learn" or is_exist_pickle == False:
         learn(category_type)
 
     if cmd == "predict":
-        model = create_model()
+        model = create_model(category_type)
         category_array_id = model.decide(input_data)
         mysql = init_mysql()
         category_type_id = get_category_type_id_from_db(mysql, category_type)
